@@ -1,3 +1,10 @@
+/*
+
+Covid 19 Data Exploration 
+Skills used: Joins, CTE's, Temp Tables, Window Functions, Aggregate Functions, Creating Views, Converting Data Types
+
+*/
+
 --Glance through the data
 
 SELECT * 
@@ -12,6 +19,8 @@ ORDER BY 3,4;
 
 ------------------------------------------------------
 
+-- Ordered Data to start with
+
 SELECT Location, date, total_cases, total_deaths, population
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
@@ -19,6 +28,7 @@ ORDER BY 1,2;
 
 -- Total Cases vs Total Deaths
 -- Shows likehood of dying if you contract covid in your country
+
 SELECT Location, date, total_cases, total_deaths, (total_deaths/total_cases)*100 AS DeathPercentage
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
@@ -27,6 +37,7 @@ ORDER BY 1,2;
 
 -- Total Cases vs Population
 -- Shows what percentage of population got infected
+
 SELECT Location, date, total_cases, population, (total_cases/population)*100 AS InfectedPercentage
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
@@ -34,6 +45,7 @@ WHERE continent is not null
 ORDER BY 1,2;
 
 -- Countries with highest infection rate compared to population
+
 SELECT Location, population, MAX(total_cases) as HighestInfectionCount, MAX((total_cases/population))*100 AS InfectedPercentage
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
@@ -41,6 +53,7 @@ GROUP BY Location,population
 ORDER BY InfectedPercentage desc;
 
 -- Countries with highest Death count per population
+
 SELECT Location, population, MAX(cast(total_deaths as int)) AS TotalDeathCount
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
@@ -49,6 +62,7 @@ ORDER BY TotalDeathCount desc;
 
 --Let's see things continent wise
 --Continent with highest death counts
+
 SELECT location, MAX(cast(total_deaths as int)) AS TotalDeathCount
 FROM CovidProject..CovidDeaths
 WHERE continent is null
@@ -56,6 +70,7 @@ GROUP BY location
 ORDER BY TotalDeathCount desc;
 
 --Global Numbers
+
 SELECT SUM(new_cases) AS total_cases, SUM(cast(new_deaths as int)) AS total_deaths, SUM(cast(new_deaths as int))/SUM(new_cases)*100  AS DeathPercentage
 FROM CovidProject..CovidDeaths
 WHERE continent is not null
